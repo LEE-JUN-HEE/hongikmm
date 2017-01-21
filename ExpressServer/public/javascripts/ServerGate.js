@@ -1,13 +1,11 @@
 ﻿var express = require('express');
 var router = express.Router();
+var packet = require('./public/javascripts/C./Common/packet.js');
 
 
 router.get('/testUserInfo', function (req, res) {
     res.writeHead(200, { "Content-Type": "application/json" });
-    var json = JSON.stringify({
-        UserID : 'HIHI', 
-        Gold : '0', 
-    });
+    var json = JSON.stringify(packet.Res_Login);
     res.end(json);
 });
 
