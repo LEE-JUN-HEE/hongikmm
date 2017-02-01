@@ -1,6 +1,6 @@
 ﻿var express = require('express');
 var router = express.Router();
-var packet = require('./public/javascripts/C./Common/packet.js');
+var packet = require('./Common/packet.js');
 
 
 router.get('/testUserInfo', function (req, res) {
