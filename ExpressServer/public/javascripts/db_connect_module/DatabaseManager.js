@@ -8,9 +8,11 @@
  * 결과를 받아 다시 응답 메시지를 만들어 ? 전송가능하게
  * 전달해준다.
  */
+
 var mysql = require('mysql');
 var con = mysql.createConnection({
-     host: "loacalhost",
+     host: "127.0.0.1",
+     port: 3306,
      user: "root",
      password: "tpwns1",
      database: "GameDB"
@@ -23,40 +25,48 @@ exports.UserDBConnect = function(queryMesJSON) {
                console.log(queryMesJSON);
                var RetJSON;
                con.connect(function(err) {
-                    // if (err) throw err;
+                    if (err) throw err;
                });
                var insertMes = { UID: queryMesJSON.UID, userID: queryMesJSON.userID };
+               try {
+                    var query = con.query('INSERT INTO User SET ?', insertMes,
+                         function(err, result) {
 
-               var query = con.query('INSERT INTO User SET ?', insertMes,
-                    function(err, result) {
-                         if (err) throw err;
-                         console.log(query.sql);
+                              if (err) {
+                                   console.log("insert error emit");
+console.log(err);
+                                   throw ER_DUP_ENTRY_WITH_KEY_NAME;
+                              }
 
-                         RetJSON = {
-                              MessageType: "SingIn",
-                              SingInState: "true"
-                         };
-                         console.log("create user");
-                         con.end();
-                    });
+                              RetJSON = {
+                                   MType: "SingIn",
+                                   userID: query.values.userID,
+                                   SingInState: "true"
+                              };
+                              console.log(RetJSON);
+                              //console.log("create user");
+                              con.end();
+                         });
+               } catch (ex) {
+                    RetJSON = {
+                                   MType: "SingIn",
+                                   userID: query.values.userID,
+                                   SingInState: "true"
+                              };
+                    console.log(RetJSON);
 
-               var selectquery = con.query('SELECT * FROM User ', function(err, rows) {
-                    console.log(rows);
-  con.end();
-               });
-
+                    con.end();
+               }
                /*
-                              var UserSingInQuery = require('./UserDBManager.js').UserSingInQuery;
+                              var selectquery = con.query('SELECT * FROM User ', function(err, rows) {
+                                   if (err) throw err;
 
-                              UserSingInQuery(queryMesJSON, fucntion(err, callback) {
-                                   responseMessage = {
-                                        MessageType: callback.mType,
-                                        SignInState: callback.SignInState
-                                   };
-                                     callback(responseMessage);
+                                   console.log(rows);
+                                   con.end();
                               });
                */
-               return RetJSON;
+
+               //return RetJSON;
                break;
 
           case "LogIn":

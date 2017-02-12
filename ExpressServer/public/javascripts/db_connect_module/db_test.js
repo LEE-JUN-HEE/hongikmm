@@ -1,5 +1,3 @@
-
-
 var queryMesJSON = {
      mType: "SignIn",
      UID: "testUID",
@@ -9,6 +7,11 @@ var queryMesJSON = {
 console.log(queryMesJSON);
 
 var UserDBConnect = require('./DatabaseManager.js').UserDBConnect;
-UserDBConnect(queryMesJSON, function(callback) {
-     console.log(callback);
-});
+try {
+     UserDBConnect(queryMesJSON, function(err, callback) {
+         // if (err) throw callback;
+          console.log("@@try");
+     });
+} catch (mes){
+     console.log("@@catch");
+}
