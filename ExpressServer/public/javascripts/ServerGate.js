@@ -5,22 +5,21 @@ var packet = require('./Common/packet.js');
 
 router.get('/testUserInfo', function (req, res) {
     res.writeHead(200, { "Content-Type": "application/json" });
+    
+    //DB 매니저로부터 받는 함수 추가 예정
     var json = JSON.stringify(packet.Res_Login);
     res.end(json);
 });
 
-router.get('/Login', function (req, res) {
-    
+router.get('/' + packet.type.Signin, function (req, res) {
+    if (req.method == "POST") {
+        req.on('data', function (){});
+    }
 });
 
-router.get('/Logout', function (req, res) {
+router.get('/' + packet.type.Login, function (req, res) {
     
 });
-
-router.get('/SignIn', function (req, res) {
-    
-});
-
 
 
 module.exports = router;
