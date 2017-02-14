@@ -18,45 +18,94 @@ var con = mysql.createConnection({
      database: "GameDB"
 });
 
-exports.UserDBConnect = function(queryMesJSON) {
+var SingInMes; // join message
+var UserInfoMes;
+var RetJSON;
+var Ranking;
+
+exports.UserDBConnect = function(queryMesJSON, callbackJSON) {
      var responseMessage;
      switch (queryMesJSON.mType) {
           case "SignIn": // db로 새로운 유저 정보 insert
-               console.log(queryMesJSON);
-               var RetJSON;
+
                con.connect(function(err) {
                     if (err) throw err;
                });
-               var insertMes = { UID: queryMesJSON.UID, userID: queryMesJSON.userID };
-               try {
-                    var query = con.query('INSERT INTO User SET ?', insertMes,
-                         function(err, result) {
+               var state = true;
+               SingInMes = { UID: queryMesJSON.UID, userID: queryMesJSON.userID };
 
-                              if (err) {
-                                   console.log("insert error emit");
-console.log(err);
-                                   throw ER_DUP_ENTRY_WITH_KEY_NAME;
-                              }
+               var query = con.query('INSERT INTO User SET ?', SingInMes,
+                    function(err) {
 
-                              RetJSON = {
-                                   MType: "SingIn",
-                                   userID: query.values.userID,
-                                   SingInState: "true"
-                              };
-                              console.log(RetJSON);
-                              //console.log("create user");
-                              con.end();
-                         });
-               } catch (ex) {
-                    RetJSON = {
-                                   MType: "SingIn",
-                                   userID: query.values.userID,
-                                   SingInState: "true"
-                              };
-                    console.log(RetJSON);
+                         if (err) {
+                              console.log("insert error emit");
+                              console.log(err);
+                              state = false;
+                              // throw (new Error (err));
+                         }
 
-                    con.end();
-               }
+
+                         console.log("create user");
+                         UserInfoMes = { UID: queryMesJSON.UID, userID: queryMesJSON.userID }
+                         var query = con.query('INSERT INTO UserInfo SET ?', UserInfoMes,
+                              function(err) {
+                                   if (err) {
+                                        console.log("userinfo create fail");
+                                        console.log(err);
+                                        state = false;
+                                   }
+
+                                   console.log("create UserInfo");
+
+                                   var ranking;
+                                   var query = con.query('SELECT * FROM Ranking', function(err, rows, cols) {
+                                        if (err) {
+                                             console.log("ranking counting fail");
+                                             console.log(err);
+                                             state = false;
+                                        }
+                                        console.log("create ranking");
+
+                                        ranking = rows.length + 1;
+
+                                        Ranking = { UID: queryMesJSON.UID, Rank: ranking, userID: queryMesJSON.userID }
+                                        var query = con.query('INSERT INTO Ranking SET ?', UserInfoMes,
+                                             function(err, callback) {
+                                                  if (err) {
+                                                       console.log("ranking create fail");
+                                                       console.log(err);
+                                                       state = false;
+                                                  }
+
+                                                  con.end();
+
+
+                                                  if (state) {
+                                                       RetJSON = {
+                                                            MType: "SingIn",
+                                                            userID: query.values.userID,
+                                                            SingInState: "true"
+                                                       };
+                                                  } else {
+                                                       RetJSON = {
+                                                            MType: "SingIn",
+                                                            userID: query.values.userID,
+                                                            SingInState: "false"
+                                                       };
+                                                  }
+
+                                                  callbackJSON = RetJSON;
+                                             });
+
+                                   });
+
+                              });
+                         //con.end();
+                    });
+
+
+
+
                /*
                               var selectquery = con.query('SELECT * FROM User ', function(err, rows) {
                                    if (err) throw err;
@@ -65,7 +114,7 @@ console.log(err);
                                    con.end();
                               });
                */
-
+               //console.log("??");
                //return RetJSON;
                break;
 

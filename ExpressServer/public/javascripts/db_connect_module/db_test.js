@@ -3,15 +3,15 @@ var queryMesJSON = {
      UID: "testUID",
      userID: "testuserID"
 };
-
-console.log(queryMesJSON);
-
+var RetJSON;
 var UserDBConnect = require('./DatabaseManager.js').UserDBConnect;
-try {
-     UserDBConnect(queryMesJSON, function(err, callback) {
-         // if (err) throw callback;
-          console.log("@@try");
-     });
-} catch (mes){
-     console.log("@@catch");
-}
+
+UserDBConnect(queryMesJSON, RetJSON, function(err, result) {
+     if (err) {
+     	console.log("UserDBConnect error");
+     }
+     console.log("!@@!#@$");
+     console.log(RetJSON);
+});
+
+console.log(RetJSON);
