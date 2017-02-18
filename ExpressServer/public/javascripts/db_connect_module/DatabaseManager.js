@@ -104,8 +104,6 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                          //con.end();
                     });
 
-
-
                break;
 
           case "LogIn":
@@ -122,15 +120,15 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                          }
 
                          RetJSON = {
-                              mType: "LogIn",
-                              UID: rows[0].UID,
-                              Level:rows[0].Level,
-                              userID:rows[0].userID,
-                              money: rows[0].money,
-                              CompetitionScore: rows[0].CompetitionScore,
-                              SingleScore: rows[0].SingleScore
-                         }
-                         console.log(RetJSON);
+                                   mType: "LogIn",
+                                   UID: rows[0].UID,
+                                   Level: rows[0].Level,
+                                   userID: rows[0].userID,
+                                   money: rows[0].money,
+                                   CompetitionScore: rows[0].CompetitionScore,
+                                   SingleScore: rows[0].SingleScore
+                              }
+                              //console.log(RetJSON);
 
                          con.end();
                     });
@@ -146,7 +144,45 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                break;
 
           case "DropOut":
-               var DropOutQuery = require('./UserDBMager.js').DropOutQuery;
+               con.connect(function(err) {
+                    if (err) throw err;
+               });
+
+               var query = con.query('DELETE FROM User WHERE UID = ?', queryMesJSON.UID,
+                    function(err, rows, cols) {
+                         if (err) {
+                              console.log("ranking create fail");
+                              console.log(err);
+                         }
+
+                         var query = con.query('DELETE FROM UserInfo WHERE UID = ?', queryMesJSON.UID,
+                              function(err, rows, cols) {
+                                   if (err) {
+                                        console.log("ranking create fail");
+                                        console.log(err);
+                                   }
+
+                                   var query = con.query('DELETE FROM Ranking WHERE UID = ?', queryMesJSON.UID,
+                                        function(err, rows, cols) {
+                                             if (err) {
+                                                  console.log("ranking create fail");
+                                                  console.log(err);
+                                             }
+
+                                             RetJSON = {
+                                                  mType: "LogOut",
+                                                  userID: queryMesJSON.userID,
+                                                  DropOutState: state
+                                             };
+
+                                             console.log(rows);
+
+                                             con.end();
+                                        });
+
+                              });
+
+                    });
                break;
 
           default: //실패 Message를 전달해줄까 생각중

@@ -1,6 +1,8 @@
 var queryMesJSON = {
-     mType: "LogIn",
+     //mType: "SignIn",
+     mType: "DropOut",
      UID: "testUID"
+     //userID: "testID"
 };
 var RetJSON;
 var UserDBConnect = require('./DatabaseManager.js').UserDBConnect;
