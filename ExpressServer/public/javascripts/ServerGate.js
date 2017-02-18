@@ -12,8 +12,14 @@ router.get('/testUserInfo', function (req, res) {
 });
 
 router.get('/' + packet.type.Signin, function (req, res) {
+    
+    console.log(req.method);
     if (req.method == "POST") {
-        req.on('data', function (){});
+        req.on('data', function (req, res){
+            console.log(req.body);
+            //JSON.parse(req.body);
+            res.end(req.body);
+        });
     }
 });
 
