@@ -20,10 +20,11 @@ var con = mysql.createConnection({
 
 var SingInMes; // join message
 var UserInfoMes;
-var RetJSON;
+//var RetJSON;
 var Ranking;
+var LogInMes;
 
-exports.UserDBConnect = function(queryMesJSON, callbackJSON) {
+exports.UserDBConnect = function(queryMesJSON, RetJSON) {
      var responseMessage;
      switch (queryMesJSON.mType) {
           case "SignIn": // db로 새로운 유저 정보 insert
@@ -105,24 +106,35 @@ exports.UserDBConnect = function(queryMesJSON, callbackJSON) {
 
 
 
-
-               /*
-                              var selectquery = con.query('SELECT * FROM User ', function(err, rows) {
-                                   if (err) throw err;
-
-                                   console.log(rows);
-                                   con.end();
-                              });
-               */
-               //console.log("??");
-               //return RetJSON;
                break;
 
           case "LogIn":
-               var UserLogInQuery = require('./UserDBMager.js').UserLogInQuery;
-               UserLogInQuery(queryMesJSON, function(callback) {
 
+               con.connect(function(err) {
+                    if (err) throw err;
                });
+               var query = con.query('SELECT * FROM UserInfo WHERE UID = ?', queryMesJSON.UID,
+                    function(err, rows, cols) {
+                         if (err) {
+                              console.log("ranking create fail");
+                              console.log(err);
+
+                         }
+
+                         RetJSON = {
+                              mType: "LogIn",
+                              UID: rows[0].UID,
+                              Level:rows[0].Level,
+                              userID:rows[0].userID,
+                              money: rows[0].money,
+                              CompetitionScore: rows[0].CompetitionScore,
+                              SingleScore: rows[0].SingleScore
+                         }
+                         console.log(RetJSON);
+
+                         con.end();
+                    });
+
                break;
 
           case "LogOut": //필요한가?
