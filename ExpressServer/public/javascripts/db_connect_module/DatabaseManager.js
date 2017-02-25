@@ -136,7 +136,14 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                               if (err) {
                                    console.log("ranking create fail");
                                    console.log(err);
-                                   errorNum = 40;
+
+                                   RetJSON = {
+                                        type: queryMesJSON.type,
+                                        UID: rows[0].UID,
+                                        Level: rows[0].Level,
+                                        money: rows[0].money,
+                                        ErrorNum: 40
+                                   };
                               }
 
                               RetJSON = {
@@ -146,7 +153,7 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                                    money: rows[0].money,
                                    ErrorNum: errorNum
                               };
-                             // console.log(RetJSON);
+                              // console.log(RetJSON);
 
                               con.end();
                               resolved(RetJSON);
@@ -358,7 +365,7 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                                    errorNum = 60;
                                    RetJSON = {
                                         type: queryMesJSON.type,
-                                        Rows: rows,
+                                        Ranks: rows,
                                         ErrorNum: errorNum
                                    };
                               }
@@ -367,7 +374,7 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
 
                               RetJSON = {
                                    type: queryMesJSON.type,
-                                   Rows: rows,
+                                   Ranks: rows,
                                    ErrorNum: errorNum
                               };
                               con.end();

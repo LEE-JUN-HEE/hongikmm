@@ -1,43 +1,43 @@
-﻿var type = {        //enum
+﻿var type = { //enum
 
-          SignIn: 0, //회원가입
+     SignIn: 0, //회원가입
 
-          LogIn: 10, //로그인
+     LogIn: 10, //로그인
 
-          ItemDeal: 20, //아이템 거래
+     ItemDeal: 20, //아이템 거래
 
-          LogOut: 30, //로그와웃 확장성을 생각해 냅둠
+     LogOut: 30, //로그와웃 확장성을 생각해 냅둠
 
-          DropOut: 40, //회원 탈퇴
+     DropOut: 40, //회원 탈퇴
 
-          SingleGameScore: 50, //singlegame score 확인
+     SingleGameScore: 50, //singlegame score 확인
 
-          CompetitionGameScore: 60, //경쟁전 점수 확인
+     CompetitionGameScore: 60, //경쟁전 점수 확인
 
-          SingleGameScoreUpdate: 70, //게임 실행후 결과 갱신
+     SingleGameScoreUpdate: 70, //게임 실행후 결과 갱신
 
-          CompetitionGameScoreUpdate: 80, //경쟁전 실행후 결과 갱신
+     CompetitionGameScoreUpdate: 80, //경쟁전 실행후 결과 갱신
 
-          GameBestScore: 90, //유저의 최고 점수 확인
+     GameBestScore: 90, //유저의 최고 점수 확인
 
-          RankingList: 100 //랭킹 확인 페이지에서 랭킹 확인
-     }
+     RankingList: 100 //랭킹 확인 페이지에서 랭킹 확인
+}
 exports.type = type;
 
 var ErrorNum = {
      Success: 0, //성공
 
-     UserTableInsertError : 10,   //유저 테이블  insert문에러
+     UserTableInsertError: 10, //유저 테이블  insert문에러
 
-     UserInfoTableInsertError : 20, //userInfo테이블 insert문 에러
+     UserInfoTableInsertError: 20, //userInfo테이블 insert문 에러
 
-     RankingTableInsertError : 30, //랭켕 테이블 insert 문 에러
+     RankingTableInsertError: 30, //랭켕 테이블 insert 문 에러
 
-     UserTableSelectError : 40, //user table select query error
+     UserTableSelectError: 40, //user table select query error
 
-     RankingTableSelectError : 50,  //랭킹 테이블 select문 에러
+     RankingTableSelectError: 50, //랭킹 테이블 select문 에러
 
-     RankingTableUpdateError : 60, //ranking table update query error
+     RankingTableUpdateError: 60, //ranking table update query error
 
      UserRowDeleteError: 80, //user table delete query error
 
@@ -47,7 +47,7 @@ var ErrorNum = {
 
      UnkownError: 200, //unkown error
 
-     DBconnectError : 400, //db connect error
+     DBconnectError: 400, //db connect error
 }
 exports.ErrorNum = ErrorNum;
 
@@ -58,7 +58,7 @@ var C2SPacket = {
 
 var REQ_Singin = {
      type: type.Signin,
-     UID: '',
+     uniqueID: '',
 }
 
 var REQ_Login = {
@@ -85,16 +85,120 @@ var Res_Login = {
 }
 exports.Res_Login = Res_Login;
 
-//S2S
-var S2S_SignIn = {
-    type: type.SignIn,
-    UID:  UID,
-    userID: userID
-}
-exports.S2S_SignIn = S2S_SignIn;
+/*
+ * 주고 받는 메시지 정리
+ *
+ * 숫자가 들어가는 필드는 -1값으로
+ * 스트링 값들은 필드명과 같은 이름으로
+ * ErrorNum은 0으로 디폴트 값을 지정
+ */
 
-var S2S_LogIn = {
-    mType: LogIn,
-	UID: UID
+var SignIn {
+     type: SignIn,
+     UID: "UID",
+     userID: "userID"
 }
-exports.S2S_Login = S2S_LogIn;
+
+var RetSignIn = {
+     type: SingIn,
+     ErrorNum: 0
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var LogIn {
+     type: LogIn,
+     UID: "UID"
+}
+
+var RetLogIn = {
+     type: LogIn,
+     UID: "UID",
+     Level: 0,
+     userID: "userID",
+     money: -1,
+     ErrorNum: 0
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var ItemDeal = {
+     //미구현
+}
+
+var RetItemDeal = {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var DropOut = {
+     type: DropOut,
+     UID: "UID"
+}
+
+var RetDropOut = {
+     type = DropOut,
+     ErrorNum: 0
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var SingleGameScore = {
+     type: SingleGameScore,
+     UID: "UID"
+}
+
+var RetSingleGameScore = {
+     type: SingleGameScore,
+     SingleScore: -1
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var CompetitionGameScore = {
+     type: CompetitionGameScroe,
+     UID: "UID"
+}
+
+var RetCompetitionGameScore = {
+     type: CompetitionGameScroe,
+     CompetitionScore: -1,
+     ErrorNum: 0
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var SingleGameScoreUpdate = {
+     type: SingleGameScoreUpdate,
+     UID: "UID",
+     SingleScore: -1
+}
+
+var RetSingleGameScoreUpdate = {
+     type: SingleGameScoreUpdate,
+     ErrorNum: 0
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var CompetitionGameScoreUpdate = {
+     type: CompetitionGameScoreUpdate,
+     UID: "UID":
+}
+var RetCompetitionGameScoreUpdate = {
+     type: CompetitionGameScoreUpdate,
+     ErrorNum: 0
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var RankingList = {
+     type: RankingList,
+}
+
+var RetRankingList = {
+     type: RankingList,
+     Ranks: -1,
+     ErrorNum: 0
+}
