@@ -11,19 +11,8 @@ router.get('/testUserInfo', function (req, res) {
     res.end(json);
 });
 
-router.get('/' + packet.type.Signin, function (req, res) {
-    debug('singin try : ' + req.body.UniqueID);
-    
-    //res.writeHead(200, { "Content-Type": "application/json" });
-    ////DB 조회 후 없으면 가입 로직, 있으면 로그인 로직
-    //var Res = packet.Res_Singin;
-    //Res.ErrorNum = packet.ErrorNum.Success;
-    
-    //res.end(JSON.stringify(Res));
-});
-
 router.post('/' + packet.type.Signin, function (req, res) {
-    debug('singin try : ' + req.body.UniqueID);
+    //debug('singin try : ' + req.body.UniqueID);
 
     res.writeHead(200, { "Content-Type": "application/json" });
     //DB 조회 후 없으면 가입 로직, 있으면 로그인 로직

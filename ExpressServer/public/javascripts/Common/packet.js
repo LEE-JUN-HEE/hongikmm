@@ -58,7 +58,7 @@ var C2SPacket = {
 
 var REQ_Singin = {
      type: type.Signin,
-     uniqueID: '',
+     UID: '',
 }
 
 var REQ_Login = {
@@ -84,3 +84,17 @@ var Res_Login = {
      Multi_Score: '',
 }
 exports.Res_Login = Res_Login;
+
+//S2S
+var S2S_SignIn = {
+    type: type.SignIn,
+    UID:  UID,
+    userID: userID
+}
+exports.S2S_SignIn = S2S_SignIn;
+
+var S2S_LogIn = {
+    mType: LogIn,
+	UID: UID
+}
+exports.S2S_Login = S2S_LogIn;
