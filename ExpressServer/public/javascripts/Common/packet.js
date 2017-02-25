@@ -19,7 +19,7 @@ var C2SPacket = {
 
 var REQ_Singin = {
     type : type.Signin,
-    uniqueID : '',
+    UniqueID : '',
 }
 
 var REQ_Login = {
