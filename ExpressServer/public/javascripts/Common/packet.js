@@ -93,26 +93,26 @@ exports.Res_Login = Res_Login;
  * ErrorNum은 0으로 디폴트 값을 지정
  */
 
-var SignIn {
-     type: SignIn,
+var SignIn = {
+     type: type.SignIn,
      UID: "UID",
      userID: "userID"
 }
 
 var RetSignIn = {
-     type: SingIn,
+     type: type.SingIn,
      ErrorNum: 0
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-var LogIn {
-     type: LogIn,
+var LogIn = {
+     type: type.LogIn,
      UID: "UID"
 }
 
 var RetLogIn = {
-     type: LogIn,
+     type: type.LogIn,
      UID: "UID",
      Level: 0,
      userID: "userID",
@@ -133,36 +133,36 @@ var RetItemDeal = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var DropOut = {
-     type: DropOut,
+     type: type.DropOut,
      UID: "UID"
 }
 
 var RetDropOut = {
-     type = DropOut,
+     type: type.DropOut,
      ErrorNum: 0
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var SingleGameScore = {
-     type: SingleGameScore,
+     type: type.SingleGameScore,
      UID: "UID"
 }
 
 var RetSingleGameScore = {
-     type: SingleGameScore,
+     type: type.SingleGameScore,
      SingleScore: -1
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var CompetitionGameScore = {
-     type: CompetitionGameScroe,
+     type: type.CompetitionGameScroe,
      UID: "UID"
 }
 
 var RetCompetitionGameScore = {
-     type: CompetitionGameScroe,
+     type: type.CompetitionGameScroe,
      CompetitionScore: -1,
      ErrorNum: 0
 }
@@ -170,35 +170,35 @@ var RetCompetitionGameScore = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var SingleGameScoreUpdate = {
-     type: SingleGameScoreUpdate,
+     type: type.SingleGameScoreUpdate,
      UID: "UID",
      SingleScore: -1
 }
 
 var RetSingleGameScoreUpdate = {
-     type: SingleGameScoreUpdate,
+     type: type.SingleGameScoreUpdate,
      ErrorNum: 0
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var CompetitionGameScoreUpdate = {
-     type: CompetitionGameScoreUpdate,
-     UID: "UID":
+     type: type.CompetitionGameScoreUpdate,
+     UID: "UID"
 }
 var RetCompetitionGameScoreUpdate = {
-     type: CompetitionGameScoreUpdate,
+     type: type.CompetitionGameScoreUpdate,
      ErrorNum: 0
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var RankingList = {
-     type: RankingList,
+     type: type.RankingList,
 }
 
 var RetRankingList = {
-     type: RankingList,
+     type: type.RankingList,
      Ranks: -1,
      ErrorNum: 0
 }
