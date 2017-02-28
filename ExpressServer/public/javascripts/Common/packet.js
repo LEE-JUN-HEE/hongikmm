@@ -22,7 +22,7 @@
 
      RankingList: 100 //랭킹 확인 페이지에서 랭킹 확인
 }
-exports.type = type;
+module.exports.type = type;
 
 var ErrorNum = {
      Success: 0, //성공
@@ -49,7 +49,7 @@ var ErrorNum = {
 
      DBconnectError: 400, //db connect error
 }
-exports.ErrorNum = ErrorNum;
+module.exports.ErrorNum = ErrorNum;
 
 //C2S
 var C2SPacket = {
