@@ -17,7 +17,7 @@ var con = mysql.createConnection({
      password: "tpwns1",
      database: "GameDB"
 });
-
+var errorMess = require('../Common/packet.js').ErrorNum;
 var mess = require('../Common/packet.js').type;
 
 
@@ -39,10 +39,11 @@ var UserInfoMes;
 //var RetJSON;
 var Ranking;
 var LogInMes;
+var RetJSON;
 
-exports.UserDBConnect = function(queryMesJSON, RetJSON) {
+exports.UserDBConnect = function(queryMesJSON) {
      return new Promise(function(resolved, rejected) {
-          var errorNum = 0;
+          
           switch (queryMesJSON.type) {
                case mess.SignIn: // db로 새로운 유저 정보 insert
 
@@ -58,11 +59,12 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                               if (err) {
                                    console.log("insert error emit");
                                    console.log(err);
-                                   errorNum = 10;
+                                
                                    RetJSON = {
                                         type: queryMesJSON.type,
-                                        ErrorNum: errorNum
+                                        ErrorNum: errorMess.UserTableSelectError
                                    };
+                                   rejected(RetJSON);
 
                               }
 
@@ -74,10 +76,10 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                                         if (err) {
                                              console.log("userinfo create fail");
                                              console.log(err);
-                                             errorNum = 20;
+                                             
                                              RetJSON = {
                                                   type: queryMesJSON.type,
-                                                  ErrorNum: errorNum
+                                                  ErrorNum: errorMess.UserInfoTableInsertError
                                              };
                                         }
 
@@ -93,6 +95,7 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                                                        type: queryMesJSON.type,
                                                        ErrorNum: errorNum
                                                   };
+                                                  rejected(RetJSON);
                                              }
                                              console.log("create ranking");
 
@@ -104,18 +107,19 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                                                        if (err) {
                                                             console.log("ranking create fail");
                                                             console.log(err);
-                                                            errorNum = 30;
+                                                            
                                                             RetJSON = {
                                                                  type: queryMesJSON.type,
-                                                                 ErrorNum: errorNum
+                                                                 ErrorNum: errorMess.RankingTableInsertError
                                                             };
+                                                            rejected(RetJSON);
                                                        }
 
                                                        con.end();
 
                                                        RetJSON = {
                                                             type: queryMesJSON.type,
-                                                            ErrorNum: errorNum
+                                                            ErrorNum: errorMess.Success
                                                        };
                                                        resolved(RetJSON);
                                                   });
@@ -134,7 +138,7 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                     var query = con.query('SELECT * FROM UserInfo WHERE UID = ?', queryMesJSON.UID,
                          function(err, rows, cols) {
                               if (err) {
-                                   console.log("ranking create fail");
+                                   console.log("login err");
                                    console.log(err);
 
                                    RetJSON = {
@@ -142,8 +146,9 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                                         UID: rows[0].UID,
                                         Level: rows[0].Level,
                                         money: rows[0].money,
-                                        ErrorNum: 40
+                                        ErrorNum: errorMess.UserTableSelectError
                                    };
+                                   rejected(RetJSON);
                               }
 
                               RetJSON = {
@@ -151,11 +156,12 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                                    UID: rows[0].UID,
                                    Level: rows[0].Level,
                                    money: rows[0].money,
-                                   ErrorNum: errorNum
+                                   ErrorNum: errorMess.Success
                               };
-                              // console.log(RetJSON);
+                              
 
                               con.end();
+                              //console.log(RetJSON);
                               resolved(RetJSON);
                          });
 
@@ -178,13 +184,14 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                     var query = con.query('DELETE FROM User WHERE UID = ?', queryMesJSON.UID,
                          function(err, rows, cols) {
                               if (err) {
-                                   console.log("ranking create fail");
+                                   console.log("ranking delete fail");
                                    console.log(err);
-                                   errorNum = 70;
+                                   
                                    RetJSON = {
                                         type: queryMesJSON.type,
-                                        ErrorNum: errorNum
+                                        ErrorNum: errorMess.UserRowDeleteError
                                    };
+                                   rejected(RetJSON);
                               }
 
                               var query = con.query('DELETE FROM UserInfo WHERE UID = ?', queryMesJSON.UID,
@@ -192,11 +199,12 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                                         if (err) {
                                              console.log("ranking create fail");
                                              console.log(err);
-                                             errorNum = 80;
+                                             
                                              RetJSON = {
                                                   type: queryMesJSON.type,
-                                                  ErrorNum: errorNum
+                                                  ErrorNum: errorMess.UserInfoRowDeleteError
                                              };
+                                             rejected(RetJSON);
                                         }
 
                                         var query = con.query('DELETE FROM Ranking WHERE UID = ?', queryMesJSON.UID,
@@ -204,11 +212,12 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                                                   if (err) {
                                                        console.log("ranking create fail");
                                                        console.log(err);
-                                                       errorNum = 90;
+                                                       
                                                        RetJSON = {
                                                             type: queryMesJSON.type,
-                                                            ErrorNum: errorNum
+                                                            ErrorNum: errorMess.RankingRowDeleteError
                                                        };
+                                                        rejected(RetJSON);
                                                   }
 
                                                   RetJSON = {
@@ -228,7 +237,11 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
                     break;
 
                default: //실패 Message를 전달해줄까 생각중
-                    console.log("dfsdfsdfsd@@@Message not Matched with case");
+                    RetJSON ={
+                        ErrorNum: errorMess.UnkowntypeError 
+                    };
+                    rejected(RetJSON);
+                    //console.log(queryMesJSON.type);
                     break;
           }
      });
@@ -237,19 +250,20 @@ exports.UserDBConnect = function(queryMesJSON, RetJSON) {
 
 exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
      return new Promise(function(resolved, rejected) {
-          var errorNum = 0;
+          
           switch (queryMesJSON.type) {
                case mess.SingleGameScore:
                     var query = con.query('SELECT SingleScore from Ranking WHERE UID = ?', queryMesJSON.UID,
                          function(err, rows, cols) {
                               if (err) {
                                    console.log(err);
-                                   errorNum = 50;
+                                   
                                    RetJSON = {
                                         type: queryMesJSON.type,
                                         SingleScore: rows[0].SingleScore,
-                                        ErrorNum: errorNum
+                                        ErrorNum: errorMess.RankingTableSelectError
                                    };
+                                   rejected(RetJSON);
                               }
 
                               RetJSON = {
@@ -270,12 +284,13 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                          function(err, rows, cols) {
                               if (err) {
                                    console.log(err);
-                                   errorNum = 50;
+                                
                                    RetJSON = {
                                         type: queryMesJSON.type,
                                         CompetitionScore: rows[0].CompetitionScore,
-                                        ErrorNum: errorNum
+                                        ErrorNum: errorMess.RankingTableSelectError
                                    };
+                                   rejected(RetJSON);
                               }
                               //console.log(rows[0]);
                               RetJSON = {
@@ -302,18 +317,19 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                          function(err, rows, cols) {
                               if (err) {
                                    console.log(err);
-                                   errorNum = 60;
+                                   
                                    RetJSON = {
                                         type: queryMesJSON.type,
                                         //SingleScore: rows[0].SingleScore,
-                                        ErrorNum: errorNum
+                                        ErrorNum: errorMess.RankingTableUpdateError
                                    };
+                                   rejected(RetJSON);
                               }
 
                               RetJSON = {
                                    type: queryMesJSON.type,
                                    //SingleScore: rows[0].SingleScore,
-                                   ErrorNum: errorNum
+                                   ErrorNum: errorMess.Success
                               };
                               //console.log(rows[0]);
 
@@ -331,19 +347,20 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                          function(err, rows, cols) {
                               if (err) {
                                    console.log(err);
-                                   errorNum = 60;
+                                   
                                    RetJSON = {
                                         type: queryMesJSON.type,
                                         //CompetitionScore : rows[0].CompetitionScore ,
-                                        ErrorNum: errorNum
+                                        ErrorNum: errorMess.RankingTableUpdateError
                                    };
+                                   rejected(RetJSON);
                               }
 
                               //console.log(rows);
                               RetJSON = {
                                    type: queryMesJSON.type,
                                    //CompetitionScore : rows[0].CompetitionScore ,
-                                   ErrorNum: errorNum
+                                   ErrorNum: errorMess.Success
                               };
                               con.end();
                               resolved(RetJSON);
@@ -362,12 +379,13 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                          function(err, rows, cols) {
                               if (err) {
                                    console.log(err);
-                                   errorNum = 60;
+                                   
                                    RetJSON = {
                                         type: queryMesJSON.type,
                                         Ranks: rows,
-                                        ErrorNum: errorNum
+                                        ErrorNum: errorMess.RankingTableSelectError
                                    };
+                                   rejected(RetJSON);
                               }
 
                               //console.log(rows[0]);
@@ -375,7 +393,7 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                               RetJSON = {
                                    type: queryMesJSON.type,
                                    Ranks: rows,
-                                   ErrorNum: errorNum
+                                   ErrorNum: errorMess.Success  
                               };
                               con.end();
                               resolved(RetJSON);
@@ -383,7 +401,10 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                     break;
 
                default:
-                    console.log("Message not Matched with case");
+                    RetJSON = {
+                        ErrorNum: errorMess.UnkowntypeError
+                    }
+                    //console.log("Message not Matched with case");
                     break;
           }
      });

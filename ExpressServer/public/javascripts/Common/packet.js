@@ -45,6 +45,8 @@ var ErrorNum = {
 
      RankingRowDeleteError: 100, //ranking delete query error
 
+     UnkowntypeError: 110, //unkown type input error 
+
      UnkownError: 200, //unkown error
 
      DBconnectError: 400, //db connect error
