@@ -3,7 +3,7 @@ var Promise = require('promise');
 var queryMesJSON = {
      type: mess.LogIn,
      //type: "DropOut",
-     UID: "test1UID",
+     UID: "test1UI",
      //userID: "test1ID"
      //CompetitionScore : 1000
 };

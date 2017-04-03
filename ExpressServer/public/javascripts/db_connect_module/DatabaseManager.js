@@ -81,6 +81,7 @@ exports.UserDBConnect = function(queryMesJSON) {
                                                   type: queryMesJSON.type,
                                                   ErrorNum: errorMess.UserInfoTableInsertError
                                              };
+                                             rejected(RetJSON);
                                         }
 
                                         console.log("create UserInfo");
@@ -135,36 +136,34 @@ exports.UserDBConnect = function(queryMesJSON) {
                     con.connect(function(err) {
                          if (err) throw err;
                     });
+                  
                     var query = con.query('SELECT * FROM UserInfo WHERE UID = ?', queryMesJSON.UID,
-                         function(err, rows, cols) {
-                              if (err) {
-                                   console.log("login err");
-                                   console.log(err);
+                        function(rows) {
+                            
+                            if (rows == null) {
+                                console.log("login err");
+                                console.log(rows);
 
-                                   RetJSON = {
+                                RetJSON = {
                                         type: queryMesJSON.type,
-                                        UID: rows[0].UID,
-                                        Level: rows[0].Level,
-                                        money: rows[0].money,
                                         ErrorNum: errorMess.UserTableSelectError
-                                   };
-                                   rejected(RetJSON);
-                              }
-
-                              RetJSON = {
-                                   type: queryMesJSON.type,
-                                   UID: rows[0].UID,
-                                   Level: rows[0].Level,
-                                   money: rows[0].money,
-                                   ErrorNum: errorMess.Success
-                              };
-                              
-
-                              con.end();
-                              //console.log(RetJSON);
-                              resolved(RetJSON);
-                         });
-
+                                };
+                                con.end();
+                                rejected(RetJSON);
+                            }
+                            else{
+                                RetJSON = {
+                                    type: queryMesJSON.type,
+                                    UID: rows[0].UID,
+                                    Level: rows[0].Level,
+                                    money: rows[0].money,
+                                    ErrorNum: errorMess.Success
+                                };
+                                con.end();
+                                //console.log(RetJSON);
+                                resolved(RetJSON);
+                            }
+                        });
                     break;
 
                case mess.LogOut: //필요한가?
@@ -196,6 +195,7 @@ exports.UserDBConnect = function(queryMesJSON) {
 
                               var query = con.query('DELETE FROM UserInfo WHERE UID = ?', queryMesJSON.UID,
                                    function(err, rows, cols) {
+                                       console.log("??");
                                         if (err) {
                                              console.log("ranking create fail");
                                              console.log(err);
@@ -230,9 +230,7 @@ exports.UserDBConnect = function(queryMesJSON) {
                                                   con.end();
                                                   resolved(RetJSON);
                                              });
-
                                    });
-
                          });
                     break;
 
@@ -255,7 +253,7 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                case mess.SingleGameScore:
                     var query = con.query('SELECT SingleScore from Ranking WHERE UID = ?', queryMesJSON.UID,
                          function(err, rows, cols) {
-                              if (err) {
+                              if (rows == null) {
                                    console.log(err);
                                    
                                    RetJSON = {
@@ -265,16 +263,17 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                                    };
                                    rejected(RetJSON);
                               }
+                              else{
+                                RetJSON = {
+                                    type: queryMesJSON.type,
+                                    SingleScore: rows[0].SingleScore,
+                                    ErrorNum: errorNum
+                                };
+                                //console.log(rows[0]);
 
-                              RetJSON = {
-                                   type: queryMesJSON.type,
-                                   SingleScore: rows[0].SingleScore,
-                                   ErrorNum: errorNum
-                              };
-                              //console.log(rows[0]);
-
-                              con.end();
-                              resolved(RetJSON);
+                                con.end();
+                                resolved(RetJSON);
+                              }
                          });
                     break;
 
@@ -282,7 +281,7 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                     var rows;
                     var query = con.query('SELECT CompetitionScore FROM Ranking WHERE UID = ?', queryMesJSON.UID,
                          function(err, rows, cols) {
-                              if (err) {
+                              if (rows == null) {
                                    console.log(err);
                                 
                                    RetJSON = {
@@ -293,17 +292,19 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                                    rejected(RetJSON);
                               }
                               //console.log(rows[0]);
-                              RetJSON = {
-                                   type: queryMesJSON.type,
-                                   CompetitionScore: rows[0].CompetitionScore,
-                                   ErrorNum: errorNum
-                              };
-                              //console.log(rows[0].CompetitionScore);
+                              else{
+                                RetJSON = {
+                                    type: queryMesJSON.type,
+                                    CompetitionScore: rows[0].CompetitionScore,
+                                    ErrorNum: errorNum
+                                };
+                                //console.log(rows[0].CompetitionScore);
 
-                              con.end();
-                              //callback(RetJSON);
-                              //console.log(RetJSON);
-                              resolved(RetJSON);
+                                con.end();
+                                //callback(RetJSON);
+                                //console.log(RetJSON);
+                                resolved(RetJSON);
+                              }
                          });
 
                     break;
@@ -377,7 +378,7 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
 
                     var query = con.query('SELECT * FROM Ranking',
                          function(err, rows, cols) {
-                              if (err) {
+                              if (rows == null) {
                                    console.log(err);
                                    
                                    RetJSON = {
@@ -389,14 +390,15 @@ exports.RankingDBConnect = function(queryMesJSON, RetJSON) {
                               }
 
                               //console.log(rows[0]);
-
-                              RetJSON = {
-                                   type: queryMesJSON.type,
-                                   Ranks: rows,
-                                   ErrorNum: errorMess.Success  
-                              };
-                              con.end();
-                              resolved(RetJSON);
+                              else {
+                                RetJSON = {
+                                    type: queryMesJSON.type,
+                                    Ranks: rows,
+                                    ErrorNum: errorMess.Success  
+                                };
+                                con.end();
+                                resolved(RetJSON);
+                              }
                          });
                     break;
 
