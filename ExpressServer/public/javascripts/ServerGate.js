@@ -47,22 +47,25 @@ router.post('/' + packet.type.SignIn, function (req, res) {
 });
 
 router.post('/' + packet.type.LogIn, function (req, res) {
-    console.log(req.body);
+    var error;
     req.body.type = packet.type.LogIn;
     DBManagaer.UserDBConnect(req.body).then(function (Ret) {
-        if (Ret.ErrorNum == packet.ErrorNum.UserTableSelectError) {
-            //DB에 없을 경우 가입 진행
-            console.log("Need Singin");
-            //DBManagaer.UserDBConnect(req.body).then(function (Ret) {
-            //});
-        }
-        else if (Ret.ErrorNum = packet.ErrorNum.Success) {
+        
+        if (Ret.ErrorNum == packet.ErrorNum.Success) {
             //DB에 존재. 로그인 처리
-            console.log("Login");
+            //console.log("Login");
         }
     }, function (err) {
-        console.log(err);
+        if (err.ErrorNum == packet.ErrorNum.UserTableSelectError) {
+            //DB에 없을 경우 가입 진행
+            console.log("Need Singin");
+            req.body.type = packet.type.SignIn;
+            DBManagaer.UserDBConnect(req.body).then(function (Ret) {
+            });
+        }
     });
+    
+
     var json = JSON.stringify(packet.type);
     res.end(json);
 });
