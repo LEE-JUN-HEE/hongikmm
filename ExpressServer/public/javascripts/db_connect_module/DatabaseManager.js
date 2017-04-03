@@ -43,13 +43,11 @@ var RetJSON;
 
 exports.UserDBConnect = function(queryMesJSON) {
      return new Promise(function(resolved, rejected) {
-          
+          con.connect(function(err) {
+            if (err) throw err;
+        });
           switch (queryMesJSON.type) {
                case mess.SignIn: // db로 새로운 유저 정보 insert
-
-                    con.connect(function(err) {
-                         if (err) throw err;
-                    });
 
                     SingInMes = { UID: queryMesJSON.UID, userID: queryMesJSON.userID };
 
@@ -116,7 +114,7 @@ exports.UserDBConnect = function(queryMesJSON) {
                                                             rejected(RetJSON);
                                                        }
 
-                                                       con.end();
+                                                       //con.end();
 
                                                        RetJSON = {
                                                             type: queryMesJSON.type,
@@ -133,9 +131,9 @@ exports.UserDBConnect = function(queryMesJSON) {
 
                case mess.LogIn:
 
-                    con.connect(function(err) {
-                         if (err) throw err;
-                    });
+                    //con.connect(function(err) {
+                    //     if (err) throw err;
+                    //});
                   
                     var query = con.query('SELECT * FROM UserInfo WHERE UID = ?', queryMesJSON.UID,
                         function(rows) {
@@ -148,7 +146,7 @@ exports.UserDBConnect = function(queryMesJSON) {
                                         type: queryMesJSON.type,
                                         ErrorNum: errorMess.UserTableSelectError
                                 };
-                                con.end();
+                                //con.end();
                                 rejected(RetJSON);
                             }
                             else{
@@ -159,7 +157,7 @@ exports.UserDBConnect = function(queryMesJSON) {
                                     money: rows[0].money,
                                     ErrorNum: errorMess.Success
                                 };
-                                con.end();
+                                //con.end();
                                 //console.log(RetJSON);
                                 resolved(RetJSON);
                             }
