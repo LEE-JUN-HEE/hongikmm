@@ -47,7 +47,8 @@ router.post('/' + packet.type.SignIn, function (req, res) {
 });
 
 router.post('/' + packet.type.LogIn, function (req, res) {
-    console.log("Attemt");
+    console.log(req.body);
+    req.body.type = packet.type.LogIn;
     DBManagaer.UserDBConnect(req.body).then(function (Ret) {
         if (Ret.ErrorNum == packet.ErrorNum.UserTableSelectError) {
             //DB에 없을 경우 가입 진행
