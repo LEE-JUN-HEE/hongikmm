@@ -143,7 +143,7 @@ exports.UserDBConnect = function(queryMesJSON) {
                     var query = con.query('SELECT * FROM UserInfo WHERE UID = ?', queryMesJSON.UID,
                         function(err, rows, cols) {
                             
-                            if (rows == null) {
+                            if (rows == null || rows.length == 0) {
                                 console.log("login err");
                                 //console.log(rows);
 
@@ -154,7 +154,7 @@ exports.UserDBConnect = function(queryMesJSON) {
                                 //con.end();
                                 rejected(RetJSON);
                             }
-                            else{
+                    else {
                                 RetJSON = {
                                     type: queryMesJSON.type,
                                     UID: rows[0].UID,
