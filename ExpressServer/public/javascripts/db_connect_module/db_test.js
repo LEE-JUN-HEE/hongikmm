@@ -3,7 +3,7 @@ var Promise = require('promise');
 var queryMesJSON = {
      type: mess.LogIn,
      //type: "DropOut",
-     UID: "test1UI",
+     UID: "test1UID",
      //userID: "test1ID"
      //CompetitionScore : 1000
 };
@@ -12,6 +12,7 @@ var UserDBConnect = require('./DatabaseManager.js').UserDBConnect;
 
 UserDBConnect(queryMesJSON).then(function(RetJSON){
     console.log(RetJSON);
+
 }, function(err){
     console.log(err);
 });
