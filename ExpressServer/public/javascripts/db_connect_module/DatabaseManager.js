@@ -41,11 +41,15 @@ var Ranking;
 var LogInMes;
 var RetJSON;
 
+exports.OpenDBOnce = function(){
+    con.connect(function(err) {
+        if (err) throw err;
+    });
+}
+
 exports.UserDBConnect = function(queryMesJSON) {
      return new Promise(function(resolved, rejected) {
-          con.connect(function(err) {
-            if (err) throw err;
-        });
+          
           switch (queryMesJSON.type) {
                case mess.SignIn: // db로 새로운 유저 정보 insert
 
