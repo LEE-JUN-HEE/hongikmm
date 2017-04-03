@@ -72,7 +72,7 @@ exports.UserDBConnect = function(queryMesJSON) {
 
 
                               console.log("create user");
-                              UserInfoMes = { UID: queryMesJSON.UID }
+                              UserInfoMes = { UID: queryMesJSON.UID, userID: queryMesJSON.userID };
                               var query = con.query('INSERT INTO UserInfo SET ?', UserInfoMes,
                                    function(err) {
                                         if (err) {
@@ -83,6 +83,7 @@ exports.UserDBConnect = function(queryMesJSON) {
                                                   type: queryMesJSON.type,
                                                   ErrorNum: errorMess.UserInfoTableInsertError
                                              };
+
                                              rejected(RetJSON);
                                         }
 
@@ -104,7 +105,7 @@ exports.UserDBConnect = function(queryMesJSON) {
 
                                              ranking = rows.length + 1;
 
-                                             Ranking = { UID: queryMesJSON.UID, Rank: ranking }
+                                             Ranking = { UID: queryMesJSON.UID, Rank: ranking, userID: queryMesJSON.userID };
                                              var query = con.query('INSERT INTO Ranking SET ?', Ranking,
                                                   function(err, callback) {
                                                        if (err) {
